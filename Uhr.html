@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Uhr mit Millisekunden</title>
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        color: lime;
+        font-family: monospace;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+    #uhrzeit, #datum {
+        font-size: 5vw; /* Schriftgröße passt sich Bildschirmbreite an */
+        text-align: center;
+    }
+    #fullscreenBtn {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(0,255,0,0.3);
+        border: 2px solid lime;
+        color: lime;
+        font-size: 2vw;
+        padding: 10px 15px;
+        cursor: pointer;
+        transition: opacity 0.3s;
+        z-index: 10;
+    }
+    #fullscreenBtn.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+</style>
+</head>
+<body>
+
+<div id="uhrzeit"></div>
+<div id="datum"></div>
+<button id="fullscreenBtn">⛶</button> <!-- Vollbildsymbol -->
+
+<script>
+// Uhr aktualisieren
+function aktualisiereUhr() {
+    const jetzt = new Date();
+    const stunden = String(jetzt.getHours()).padStart(2, '0');
+    const minuten = String(jetzt.getMinutes()).padStart(2, '0');
+    const sekunden = String(jetzt.getSeconds()).padStart(2, '0');
+    const millisekunden = String(jetzt.getMilliseconds()).padStart(3, '0');
+
+    document.getElementById('uhrzeit').textContent =
+        `Uhrzeit: ${stunden}:${minuten}:${sekunden}.${millisekunden}`;
+    document.getElementById('datum').textContent =
+        `Datum: ${jetzt.toLocaleDateString('de-DE')}`;
+}
+
+setInterval(aktualisiereUhr, 50);
+aktualisiereUhr();
+
+// Vollbild-Button
+const btn = document.getElementById('fullscreenBtn');
+btn.addEventListener('click', () => {
+    if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+    }
+});
+
+// Button ausblenden, wenn Vollbild
+document.addEventListener('fullscreenchange', () => {
+    if (document.fullscreenElement) {
+        btn.classList.add('hidden');
+    } else {
+        btn.classList.remove('hidden');
+    }
+});
+</script>
+
+</body>
+</html>
